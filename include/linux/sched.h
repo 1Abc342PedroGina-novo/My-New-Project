@@ -1,9 +1,33 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 
+/* modified for Pedro Emanuel in 2026 */
 #ifndef LINUX_SCHED_H
 #define LINUX_SCHED_H
 
 #include "asm-generic/int-ll64.h"
+
+struct load_weight {
+	unsigned long			weight;
+	u32				inv_weight;
+};
+
+struct rb_node {
+	unsigned long  __rb_parent_color;
+	struct rb_node *rb_right;
+	struct rb_node *rb_left;
+} __attribute__((aligned(sizeof(long))));
+/* The alignment might seem pointless, but allegedly CRIS needs it */
+
+struct rb_node_linked {
+	struct rb_node		node;
+	struct rb_node_linked	*prev;
+	struct rb_node_linked	*next;
+};
+
+struct rb_root {
+	struct rb_node *rb_node;
+};
+
 
 typedef __s64 time64_t;
 typedef __u64 timeu64_t;
