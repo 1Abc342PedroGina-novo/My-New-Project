@@ -1,6 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 
-/* modified for Pedro Emanuel in 2026 */
+/* modified by Pedro Emanuel in 2026 */
 #ifndef LINUX_SCHED_H
 #define LINUX_SCHED_H
 
