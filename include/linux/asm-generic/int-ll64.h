@@ -6,11 +6,7 @@
  * for 64-bit types.
  */
 
-/* modifications:
- *
- * I add "typedefs" of <asm-generic/int-l64.h>, <asm-generic/int-ll64.h>, <uapi/linux/types.h>, <linux/types.h> and <bsd/sys/types.h>
- * I changed the value of u64/__u64 to unsigned long long, so it's no longer unsigned long.
- */
+/* modified by Pedro Emanuel in 2026 */
 
 /* If this code bothers you, due to the kernel model, including the hybrid architecture or the somewhat distant UNIX-like style, I apologize. */
 
