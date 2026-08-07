@@ -1106,6 +1106,7 @@ struct thread {
 
 };
 
+typedef unsigned long			cgroup_state_t;
 
 #ifndef	_KERN_KERN_TYPES_H_
 typedef struct thread *thread_t;
