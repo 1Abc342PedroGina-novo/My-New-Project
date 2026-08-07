@@ -372,6 +372,24 @@ struct cgroup {
 };
 };
 
+#define NRCPUS 64
+
+typedef struct cpumask {
+    NRCPUS		nr_cpus;
+} cpumask_t;
+
+struct task_group {
+    struct cgroup *css;              // Ponteiro para o cgroup (administração)
+    struct sched_entity **se;        // Entidades de scheduling por CPU
+    struct cfs_rq **cfs_rq;          // CFS runqueues por CPU
+    unsigned long shares;            // Compartilhamento de CPU
+    atomic_t load_avg;               // Carga média do grupo
+    struct list_head list;           // Lista de grupos
+    struct task_group *parent;       // Grupo pai
+    cpumask_t *cpus_ptr;             // CPUs permitidas para o grupo
+    unsigned int nr_cpus_allowed;    // Número de CPUs..
+};
+
 struct cgroup_root {
 	/* The bitmask of subsystems attached to this hierarchy */
 	unsigned int subsys_mask;
@@ -437,7 +455,7 @@ struct thread {
     /*
      * Informações de grupo de tarefas (CFS)
      */
-    struct cgroup           *sched_task_group; /* grupo de escalonamento */
+    struct task_group           *sched_task_group; /* grupo de escalonamento */
     struct sched_dl_entity      *dl_server;     /* servidor DL associado */
     
     /*
