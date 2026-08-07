@@ -1021,24 +1021,6 @@ struct thread {
 
 };
 
-#define	ith_msize	data.msize
-#define	ith_kmsg	data.kmsg
-#define	ith_wait_result	wait_result
-
-#define	ith_msg		saved.receive.msg
-#define	ith_option	saved.receive.option
-#define ith_rcv_size	saved.receive.rcv_size
-#define ith_timeout	saved.receive.timeout
-#define ith_notify	saved.receive.notify
-#define ith_object	saved.receive.object
-#define ith_mqueue	saved.receive.mqueue
-
-#define	ith_port	saved.exception.port
-#define ith_exc		saved.exception.exc
-#define ith_exc_code	saved.exception.code
-#define ith_exc_subcode	saved.exception.subcode
-
-#define ith_other	saved.other
 
 #ifndef	_KERN_KERN_TYPES_H_
 typedef struct thread *thread_t;
@@ -1056,82 +1038,140 @@ extern vm_offset_t	active_stacks[NCPUS];	/* active kernel stacks */
  *	User routines
  */
 
-extern kern_return_t	thread_create(
+ kern_return_t	thread_create(
 	task_t		parent_task,
 	thread_t	*child_thread);
-extern kern_return_t	thread_terminate(
+ kern_return_t	thread_terminate(
 	thread_t	thread);
-extern kern_return_t	thread_suspend(
+ kern_return_t	thread_suspend(
 	thread_t	thread);
-extern kern_return_t	thread_resume(
+ kern_return_t	thread_resume(
 	thread_t	thread);
-extern kern_return_t	thread_abort(
+ kern_return_t	thread_abort(
 	thread_t	thread);
-extern kern_return_t	thread_get_state(
+ kern_return_t	thread_get_state(
 	thread_t	thread,
 	int		flavor,
 	thread_state_t	old_state,
 	natural_t	*old_state_count);
-extern kern_return_t	thread_set_state(
+ kern_return_t	thread_set_state(
 	thread_t	thread,
 	int		flavor,
 	thread_state_t	new_state,
 	natural_t	new_state_count);
-extern kern_return_t	thread_get_special_port(
+ kern_return_t	thread_get_special_port(
 	thread_t	thread,
 	int		which,
 	struct ipc_port	**portp);
-extern kern_return_t	thread_set_special_port(
+ kern_return_t	thread_set_special_port(
 	thread_t	thread,
 	int		which,
 	struct ipc_port	*port);
-extern kern_return_t	thread_info(
+ kern_return_t	thread_info(
 	thread_t	thread,
 	int		flavor,
 	thread_info_t	thread_info_out,
 	natural_t	*thread_info_count);
-extern kern_return_t	thread_assign(
+ kern_return_t	thread_assign(
 	thread_t	thread,
 	processor_set_t	new_pset);
-extern kern_return_t	thread_assign_default(
+ kern_return_t	thread_assign_default(
 	thread_t	thread);
-
-/*
- *	Kernel-only routines
- */
-
-extern void		thread_init(void);
-extern void		thread_reference(thread_t);
-extern void		thread_deallocate(thread_t);
-extern void		thread_hold(thread_t);
-extern kern_return_t	thread_dowait(
+ void		thread_init(void);
+ void		thread_reference(thread_t);
+ void		thread_deallocate(thread_t);
+ void		thread_hold(thread_t);
+ kern_return_t	thread_dowait(
 	thread_t	thread,
 	boolean_t	must_halt);
-extern void		thread_release(thread_t);
-extern kern_return_t	thread_halt(
+ void		thread_release(thread_t);
+ kern_return_t	thread_halt(
 	thread_t	thread,
 	boolean_t	must_halt);
-extern void		thread_halt_self(void);
-extern void		thread_force_terminate(thread_t);
-extern void		thread_set_own_priority(
+ void		thread_halt_self(void);
+ void		thread_force_terminate(thread_t);
+ void		thread_set_own_priority(
 	int		priority);
-extern thread_t		kernel_thread(
+ thread_t		kernel_thread(
 	task_t		task,
 	void		(*start)(void),
 	void *		arg);
-
-extern void		reaper_thread(void);
-
-#if	MACH_HOST
-extern void		thread_freeze(
+ void		thread_freeze(
 	thread_t	thread);
-extern void		thread_doassign(
+ void		thread_doassign(
 	thread_t	thread,
 	processor_set_t	new_pset,
 	boolean_t	release_freeze);
-extern void		thread_unfreeze(
+ void		thread_unfreeze(
 	thread_t	thread);
-#endif	/* MACH_HOST */
+
+ kern_return_t	cgroup_create(
+	task_t		parent_task,
+	struct cgroup	*child_cgroup);
+ kern_return_t	struct cgrouperminate(
+	struct cgroup	cgroup);
+ kern_return_t	cgroup_suspend(
+	struct cgroup	cgroup);
+ kern_return_t	cgroup_resume(
+	struct cgroup	cgroup);
+ kern_return_t	cgroup_abort(
+	struct cgroup	cgroup);
+ kern_return_t	cgroup_get_state(
+	struct cgroup	cgroup,
+	int		flavor,
+	cgroup_state_t	old_state,
+	natural_t	*old_state_count);
+ kern_return_t	cgroup_set_state(
+	struct cgroup	cgroup,
+	int		flavor,
+	cgroup_state_t	new_state,
+	natural_t	new_state_count);
+ kern_return_t	cgroup_get_special_port(
+	struct cgroup	cgroup,
+	int		which,
+	struct ipc_port	**portp);
+ kern_return_t	cgroup_set_special_port(
+	struct cgroup	cgroup,
+	int		which,
+	struct ipc_port	*port);
+ kern_return_t	cgroup_info(
+	struct cgroup	cgroup,
+	int		flavor,
+	cgroup_info_t	cgroup_info_out,
+	natural_t	*cgroup_info_count);
+ kern_return_t	cgroup_assign(
+	struct cgroup	cgroup,
+	processor_set_t	new_pset);
+ kern_return_t	cgroup_assign_default(
+	struct cgroup	cgroup);
+ void		cgroup_init(void);
+ void		cgroup_reference(struct cgroup);
+ void		cgroup_deallocate(struct cgroup);
+ void		cgroup_hold(struct cgroup);
+ kern_return_t	cgroup_dowait(
+	struct cgroup	cgroup,
+	boolean_t	must_halt);
+ void		cgroup_release(struct cgroup);
+ kern_return_t	cgroup_halt(
+	struct cgroup	cgroup,
+	boolean_t	must_halt);
+ void		cgroup_halt_self(void);
+ void		cgroup_force_terminate(struct cgroup);
+ void		cgroup_set_own_priority(
+	int		priority);
+ struct cgroup		kernel_cgroup(
+	task_t		task,
+	void		(*start)(void),
+	void *		arg);
+ void		cgroup_freeze(
+	struct cgroup	cgroup);
+ void		cgroup_doassign(
+	struct cgroup	cgroup,
+	processor_set_t	new_pset,
+	boolean_t	release_freeze);
+ void		cgroup_unfreeze(
+	struct cgroup	cgroup);
+
 
 /*
  *	Macro-defined routines
