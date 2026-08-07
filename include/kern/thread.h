@@ -373,9 +373,11 @@ struct cgroup {
 };
 
 #define NRCPUS 64
+#define BITS_PER_LONG 64
+#define CPUMASK_BITS (NR_CPUS / BITS_PER_LONG)
 
 typedef struct cpumask {
-    NRCPUS		nr_cpus;
+    unsigned long bits[CPUMASK_BITS];
 } cpumask_t;
 
 struct task_group {
