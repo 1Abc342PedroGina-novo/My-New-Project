@@ -372,6 +372,8 @@ struct cgroup {
 };
 };
 
+
+
 #define NRCPUS 64
 #define BITS_PER_LONG 64
 #define CPUMASK_BITS (NR_CPUS / BITS_PER_LONG)
@@ -420,6 +422,69 @@ struct cgroup_root {
 	 * of struct cgroup.
 	 */
 	struct cgroup cgrp;
+};
+
+struct cgroup_subsys {
+
+	bool early_init:1;
+
+	/*
+	 * If %true, the controller, on the default hierarchy, doesn't show
+	 * up in "cgroup.controllers" or "cgroup.subtree_control", is
+	 * implicitly enabled on all cgroups on the default hierarchy, and
+	 * bypasses the "no internal process" constraint.  This is for
+	 * utility type controllers which is transparent to userland.
+	 *
+	 * An implicit controller can be stolen from the default hierarchy
+	 * anytime and thus must be okay with offline csses from previous
+	 * hierarchies coexisting with csses for the current one.
+	 */
+	bool implicit_on_dfl:1;
+
+	/*
+	 * If %true, the controller, supports threaded mode on the default
+	 * hierarchy.  In a threaded subtree, both process granularity and
+	 * no-internal-process constraint are ignored and a threaded
+	 * controllers should be able to handle that.
+	 *
+	 * Note that as an implicit controller is automatically enabled on
+	 * all cgroups on the default hierarchy, it should also be
+	 * threaded.  implicit && !threaded is not supported.
+	 */
+	bool threaded:1;
+
+	/* the following two fields are initialized automatically during boot */
+	int id;
+	const char *name;
+
+	/* optional, initialized automatically during boot if not set */
+	const char *legacy_name;
+
+	/* link to parent, protected by cgroup_lock() */
+	struct cgroup_root *root;
+
+	/*
+	 * List of cftypes.  Each entry is the first entry of an array
+	 * terminated by zero length name.
+	 */
+	struct list_head cfts;
+};
+
+struct cgroup_subsys_state {
+	/* PI: the cgroup that this css is attached to */
+	struct cgroup *cgroup;
+	struct cgroup_subsys *ss;
+	struct list_head sibling;
+	struct list_head children;
+	int id;
+	unsigned int flags;
+	u64 serial_nr;
+	atomic_t online_cnt;
+	struct cgroup_subsys_state *parent;
+	int nr_descendants;
+	int nr_populated_csets;
+	int nr_populated_children;
+	struct cgroup_subsys_state *rstat_flush_next;
 };
 
 struct thread {
