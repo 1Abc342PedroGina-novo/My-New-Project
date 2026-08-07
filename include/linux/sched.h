@@ -7,17 +7,17 @@
 #include "asm-generic/int-ll64.h"
 #include <kern/thread.h>
 
-/* Used in tsk->__state: */
+/* Used in thread->__state: */
 #define TASK_RUNNING			0x00000000
 #define TASK_INTERRUPTIBLE		0x00000001
 #define TASK_UNINTERRUPTIBLE		0x00000002
 #define __TASK_STOPPED			0x00000004
 #define __TASK_TRACED			0x00000008
-/* Used in tsk->exit_state: */
+/* Used in thread->exit_state: */
 #define EXIT_DEAD			0x00000010
 #define EXIT_ZOMBIE			0x00000020
 #define EXIT_TRACE			(EXIT_ZOMBIE | EXIT_DEAD)
-/* Used in tsk->__state again: */
+/* Used in thread->__state again: */
 #define TASK_PARKED			0x00000040
 #define TASK_DEAD			0x00000080
 #define TASK_WAKEKILL			0x00000100
