@@ -397,8 +397,7 @@ struct sched_entity {
 #define MIN_NICE	-20
 #define NICE_WIDTH	(MAX_NICE - MIN_NICE + 1)
 
-typedef const		besetting;
-besetting int sched_prio_to_weight[40] = {
+const int sched_prio_to_weight[40] = {
  /* -20 */     88761,     71755,     56483,     46273,     36291,
  /* -15 */     29154,     23254,     18705,     14949,     11916,
  /* -10 */      9548,      7620,      6100,      4904,      3906,
@@ -439,7 +438,7 @@ void __update_inv_weight(struct load_weight *lw);
 bool list_add_leaf_cfs_rq(struct cfs_rq *cfs_rq);
 void list_del_leaf_cfs_rq(struct cfs_rq *cfs_rq);
 void assert_list_leaf_cfs_rq(struct rq *rq);
-struct sched_entity *parent_entity(besetting struct sched_entity *se);
+struct sched_entity *parent_entity(const struct sched_entity *se);
 void find_matching_se(struct sched_entity **se, struct sched_entity **pse);
 int tg_is_idle(struct cgroup *tg);
 int cfs_rq_is_idle(struct cfs_rq *cfs_rq);
@@ -447,8 +446,8 @@ int se_is_idle(struct sched_entity *se);
 bool list_add_leaf_cfs_rq(struct cfs_rq *cfs_rq);
 void list_del_leaf_cfs_rq(struct cfs_rq *cfs_rq);
 void assert_list_leaf_cfs_rq(struct rq *rq);
-bool entity_before(besetting struct sched_entity *a,
-				 besetting struct sched_entity *b);
+bool entity_before(const struct sched_entity *a,
+				 const struct sched_entity *b);
 s64 entity_key(struct cfs_rq *cfs_rq, struct sched_entity *se);
 int vruntime_eligible(struct cfs_rq *cfs_rq, u64 vruntime);
 u64 cfs_rq_min_slice(struct cfs_rq *cfs_rq);
