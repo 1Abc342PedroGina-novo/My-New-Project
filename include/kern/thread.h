@@ -376,7 +376,7 @@ struct cgroup {
 
 #define NRCPUS 64
 #define BITS_PER_LONG 64
-#define CPUMASK_BITS (NR_CPUS / BITS_PER_LONG)
+#define CPUMASK_BITS (NRCPUS / BITS_PER_LONG)
 
 typedef struct cpumask {
     unsigned long bits[CPUMASK_BITS];
@@ -612,7 +612,8 @@ struct thread {
     /* ================================================================
      * SEÇÃO 3: ESTATÍSTICAS E MONITORAMENTO
      * ================================================================ */
-    
+
+#define NCPUS		NRCPUS
     /*
      * Estatísticas de CPU
      */
@@ -624,7 +625,7 @@ struct thread {
     /*
      * Estatísticas de espera
      */
-    unsigned long               wait_count;     /* contador de esperas */
+    unsigned long               state_wait_count;     /* contador de esperas */
     u64                         wait_time_start; /* início do tempo de espera */
     u64                         wait_time_max;  /* tempo máximo de espera */
     u64                         wait_time_total; /* tempo total de espera */
@@ -814,7 +815,7 @@ struct thread {
     event_t                     wait_event;     /* evento em espera */
     event_t                     wake_event;     /* evento de wakeup */
     unsigned int                wait_flags;     /* flags de espera */
-    unsigned int                wait_count;     /* contador de esperas */
+    unsigned int                block_wait_count;     /* contador de esperas */
     
     /*
      * Suspensão
