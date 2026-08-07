@@ -1,28 +1,17 @@
-/* 
- * Mach Operating System
- * Copyright (c) 1994-1987 Carnegie Mellon University
- * All Rights Reserved.
+/* Copyright (C) Pedro Emanuel 2026
  * 
- * Permission to use, copy, modify and distribute this software and its
- * documentation is hereby granted, provided that both the copyright
- * notice and this permission notice appear in all copies of the
- * software, derivative works or modified versions, and any portions
- * thereof, and that both notices appear in supporting documentation.
- * 
- * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"
- * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR
- * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.
- * 
- * Carnegie Mellon requests users of this software to return to
- * 
- *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU
- *  School of Computer Science
- *  Carnegie Mellon University
- *  Pittsburgh PA 15213-3890
- * 
- * any improvements or extensions that they make and grant Carnegie Mellon
- * the rights to redistribute these changes.
+ * This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 2 of 
+ * the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * PURPOSE. See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with this program; if not,
+ * write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+ * USA
  */
+/* modified by Pedro Emanuel 2026 */
 /*
  * HISTORY
  * 19-Aug-94  David Golub (dbg) at Carnegie-Mellon University
@@ -221,6 +210,7 @@
 #ifndef	_KERN_THREAD_H_
 #define _KERN_THREAD_H_
 
+#include <asm-generic/int-ll64.h>
 #include <linux/sched.h>
 #include <mach/boolean.h>
 #include <mach/thread_info.h>
@@ -239,56 +229,17 @@
 #include <kern/timer.h>
 #include <kern/lock.h>
 #include <kern/sched.h>
-#include <kern/task.h>		/* for current_space(), current_map() */
+#include <kern/task.h>
 #include <machine/thread.h>
 #include <ipc/ipc_kmsg_queue.h>
 
 struct thread {
-    /* ================================================================
-     * SEÇÃO 1: CFS/EEVDF - COMPLETELY FAIR SCHEDULER
-     * EARLIEST ELIGIBLE VIRTUAL DEADLINE FIRST
-     * ================================================================ */
-    
-    /*
-     * Entidade principal de escalonamento CFS
-     * Contém: vruntime, load_weight, run_node, on_rq, exec_start,
-     * sum_exec_runtime, prev_sum_exec_runtime, nr_migrations, etc.
-     */
+
     struct sched_entity         se;
-    
-    /*
-     * Entidade para escalonamento por deadline (EEVDF)
-     * Contém: deadline, runtime, period, dl_runtime, dl_deadline,
-     * dl_period, dl_bw, dl_density, flags, etc.
-     */
     struct sched_dl_entity      dl;
-    
-    /*
-     * Estatísticas de escalonamento
-     * Contém: wait_start, wait_max, wait_count, wait_sum,
-     * iowait_count, iowait_sum, sleep_start, sleep_max,
-     * sum_sleep_runtime, block_start, block_max, sum_block_runtime,
-     * exec_max, slice_max, nr_migrations_cold, nr_wakeups, etc.
-     */
     struct sched_statistics     stats;
-    
-    /*
-     * Informações de escalonamento para contabilidade
-     * Contém: pcount, run_delay, max_run_delay, min_run_delay,
-     * last_arrival, last_queued, etc.
-     */
     struct sched_info           sched_info;
-    
-    /*
-     * Média de carga para balanceamento de carga
-     * Contém: last_update_time, load_sum, runnable_sum, util_sum,
-     * period_contrib, load_avg, runnable_avg, util_avg, util_est
-     */
     struct sched_avg            avg;
-    
-    /*
-     * Média de carga para escalonamento RT/DL
-     */
     struct sched_avg            avg_rt;
     struct sched_avg            avg_dl;
     
