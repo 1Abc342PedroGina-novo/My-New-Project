@@ -59,6 +59,7 @@ struct load_weight {
 	u32				inv_weight;
 };
 
+
 struct rb_node {
 	unsigned long  __rb_parent_color;
 	struct rb_node *rb_right;
@@ -75,6 +76,24 @@ struct rb_node_linked {
 struct rb_root {
 	struct rb_node *rb_node;
 };
+
+struct rb_root_cached {
+	struct rb_root rb_root;
+	struct rb_node *rb_leftmost;
+};
+
+/*
+ * Leftmost tree with links. This would allow a trivial rb_rightmost update,
+ * but that has been omitted due to the lack of users.
+ */
+struct rb_root_linked {
+	struct rb_root		rb_root;
+	struct rb_node_linked	*rb_leftmost;
+};
+
+#define RB_ROOT (struct rb_root) { NULL, }
+#define RB_ROOT_CACHED (struct rb_root_cached) { {NULL, }, NULL }
+#define RB_ROOT_LINKED (struct rb_root_linked) { {NULL, }, NULL }
 
 
 typedef __s64 time64_t;
