@@ -3,7 +3,7 @@
 /* HISTORIC:
  * 9:37 08/08/26 
  * i make struct mutex 
- * and
+ * and define MUTEX_INITIALIZER
  */
 
 #ifndef MACH_MUTEX_H
