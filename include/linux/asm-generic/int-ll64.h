@@ -60,6 +60,8 @@ typedef struct {
 	int __aligned(sizeof(int)) counter;
 } atomic_t;
 
+void atomic_set(atomic_t *v, int i);
+
 typedef struct {
 	s64 counter;
 } atomic64_t;
