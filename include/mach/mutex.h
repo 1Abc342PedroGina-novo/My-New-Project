@@ -17,7 +17,7 @@ typedef struct mutex {
     u64    lock_byte;
 #ifdef ARM32 
    u64    lock_arm64;
-#else I386
+#elif I386
    u64    lock_i64;
 #endif
 } *mutex_t;
