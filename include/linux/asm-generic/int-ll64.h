@@ -13,6 +13,8 @@
 #ifndef INT_LL64_H
 #define INT_LL64_H
 
+#define ATOMIC_INIT(i) { .counter = (i) }
+
 typedef __signed__ char __s8;
 typedef unsigned char __u8;
 
