@@ -16,7 +16,7 @@ struct object_info {
    unsigned long      highwaterhdrmbr;
    unsigned long      invalid_attr;
    bool        boolean;
-   unsigend long      pooltype;
+   unsigned long      pooltype;
 };
 
 struct object_type {
@@ -30,12 +30,12 @@ struct object_type {
    unsigned long      highwaterhdrmbr;
    struct object_info data;
    unsigned long      key;
-   struct mutex     lock;
+   struct lock    lock;
 };
 
 struct object {
  s64      pointer;
- struct inode    inode;
+ struct inode    *inode;
  union {
     s64 handlecount;
     volatile void  nexttofree;
@@ -45,7 +45,7 @@ struct object {
  u8    handler;
  u8    quota;
  union {
- u64        cration_info;
+ u64        creation_info;
  void      quotainfo;
 };
  u8 body;
