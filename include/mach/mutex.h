@@ -15,9 +15,9 @@ typedef struct mutex {
     int lock;       /* Estado do cadeado: 0 para livre, 1 para ocupado */
     char *name;     /* Nome do mutex para fins de depuração */
     u64    lock_byte;
-#ifdef ARM32 
+#if defined(__aarch64__)
    u64    lock_arm64;
-#elif I386
+#elif defined(__x86_64__)
    u64    lock_i64;
 #endif
 } *mutex_t;
