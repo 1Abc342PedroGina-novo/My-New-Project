@@ -7,6 +7,7 @@
 #include <linux/sched.h>
 #include <vm/vm_map.h>
 #include <mach/mutex.h>
+#include <kern/lock.h>
 
 struct address_space {
 	struct inode		*host;
@@ -16,6 +17,7 @@ struct address_space {
 	struct rb_root_cached	i_mmap;
 	unsigned long		nrpages;
 	unsigned long		flags;
+    struct lock			*spin_lock;
 } __attribute__((aligned(sizeof(long)))) __randomize_layout;
 
 struct inode {
@@ -23,11 +25,11 @@ struct inode {
 	unsigned short		i_opflags;
 	unsigned int		i_flags;
 	u32			i_rdev;
-	u32			i_size;
-	s64		i_atime_sec;
+	u64			i_size;
+	s64		i_atime_sec;  //in linux time64_t = s64
 	s64		i_mtime_sec;
 	s64		i_ctime_sec;
-	u32			i_atime_nsec;
+	u32			i_atime_nsec; 
 	u32			i_mtime_nsec;
 	u32			i_ctime_nsec;
 	u32			i_generation;
