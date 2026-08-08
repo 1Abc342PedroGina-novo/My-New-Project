@@ -47,6 +47,7 @@ struct inode {
 		unsigned		i_dir_seq;
   struct rb_node      *rb_tree;
   struct vm_map      *virtual_map;
+  struct adress_space		*object_node_space;
 };
 
 #endif /* LINUX_INODE_H */
