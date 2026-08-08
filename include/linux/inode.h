@@ -52,4 +52,15 @@ struct inode {
   struct adress_space		*object_node_space;
 };
 
+struct file {
+	unsigned short f_mode;
+	unsigned short f_flags;
+	unsigned short f_count;
+	struct inode * f_inode;
+    s64 f_pos;
+    struct file		*prev;
+    struct file     *next;
+};
+
+
 #endif /* LINUX_INODE_H */
