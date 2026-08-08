@@ -50,3 +50,15 @@ struct object {
 };
  u8 body;
 };
+
+
+enum object { 
+     Thread = struct thread;
+     Task = struct task;
+     Memory Page = struct vm_page;
+     Virtual Map = struct vm_map;
+     Mutex = struct mutex;
+     File = struct file;
+     IPC Message = struct message;
+     Key;
+};
