@@ -1,6 +1,8 @@
 /* SPDX License Indentifier: GPL-2.0 */
 /* created by Pedro Emanuel */
 /* HISTORIC:
+ * 9:41 08/08/26
+ * i changed MUTEX_INITIALIZER traditional for a new MUTEX_INITIALIZER and mutex_init */
  * 9:37 08/08/26 
  * i make struct mutex 
  * and define MUTEX_INITIALIZER
@@ -22,5 +24,10 @@ typedef struct mutex {
 #endif
 } *mutex_t;
 
-#define MUTEX_INITIALIZER { 0, 0 }
+#define MUTEX_INITIALIZER(name) \
+    { .lock = ATOMIC_INIT(0), .name = name, .owner = 0, .waiters = 0, .flags = 0 }
 
+#define mutex_init(m) \
+    do { atomic_set(&(m)->lock, 0); (m)->owner = 0; (m)->waiters = 0; } while(0)
+
+#endif /* MACH_MUTEX_H */
