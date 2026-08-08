@@ -1,3 +1,5 @@
+/* SPDX License Indentifier: GPL-2.0 */
+/* Modified by Pedro Emanuel 2026 */
 /*
  * Copyright 1991-1998 by Open Software Foundation, Inc. 
  *              All Rights Reserved 
