@@ -52,13 +52,13 @@ struct object {
 };
 
 
-enum object { 
-     Thread = struct thread;
-     Task = struct task;
-     Memory Page = struct vm_page;
-     Virtual Map = struct vm_map;
-     Mutex = struct mutex;
-     File = struct file;
-     IPC Message = struct message;
-     Key;
-};
+#define Thread    ((struct thread*)0)
+#define Task      ((struct task*)0)
+#define Memory_Page ((struct vm_page*)0)
+#define Virtual_Map ((struct vm_map*)0)
+#define Mutex     ((struct mutex*)0)
+#define File      ((struct file*)0)
+#define IPC_Message ((struct message*)0)
+#define Key       ((void*)0)
+
+#endif
