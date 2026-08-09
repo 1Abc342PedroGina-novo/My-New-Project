@@ -5,7 +5,7 @@
  *              All Rights Reserved 
  */
 /* 
- * msg_s.h,v
+ * xkern.h,v
  *
  * x-kernel v3.2
  *
