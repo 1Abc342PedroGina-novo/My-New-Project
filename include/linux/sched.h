@@ -7,6 +7,9 @@
 #include "asm-generic/int-ll64.h"
 #include <kern/thread.h>
 
+#define	RB_RED		0
+#define	RB_BLACK	1 
+
 /* Used in thread->__state: */
 #define TASK_RUNNING			0x00000000
 #define TASK_INTERRUPTIBLE		0x00000001
