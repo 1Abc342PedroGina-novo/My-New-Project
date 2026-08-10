@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: GPL-2.0 */
-
+/* CREDS:  (C) 1999  Andrea Arcangeli <andrea@suse.de> */
 /* modified by Pedro Emanuel in 2026 */
 #ifndef LINUX_SCHED_H
 #define LINUX_SCHED_H
@@ -466,4 +466,23 @@ struct thread *pick_next_task(struct rq *rq, struct rq_flags *rf);
 struct thread *__pick_next_task(struct rq *rq, struct rq_flags *rf);
 struct thread *pick_task(struct rq *rq, struct rq_flags *rf);
 struct rq *context_switch(struct rq *rq, struct thread *prev, struct thread *next, struct rq_flags *rf);
+
+
+#define rb_parent(r)   ((struct rb_node *)((r)->__rb_parent_color & ~3))
+
+#define	rb_entry(ptr, type, member) container_of(ptr, type, member)
+
+#define RB_EMPTY_ROOT(root)  (READ_ONCE((root)->rb_node) == NULL)
+
+/* 'empty' nodes are nodes that are known not to be inserted in an rbtree */
+#define RB_EMPTY_NODE(node)  \
+	((node)->__rb_parent_color == (unsigned long)(node))
+#define RB_CLEAR_NODE(node)  \
+	((node)->__rb_parent_color = (unsigned long)(node))
+
+#define RB_EMPTY_LINKED_NODE(lnode)  RB_EMPTY_NODE(&(lnode)->node)
+#define RB_CLEAR_LINKED_NODE(lnode)  ({					\
+	RB_CLEAR_NODE(&(lnode)->node);					\
+	(lnode)->prev = (lnode)->next = NULL;				\
+})
 #endif
