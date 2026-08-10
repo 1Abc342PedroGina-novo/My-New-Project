@@ -485,4 +485,138 @@ struct rq *context_switch(struct rq *rq, struct thread *prev, struct thread *nex
 	RB_CLEAR_NODE(&(lnode)->node);					\
 	(lnode)->prev = (lnode)->next = NULL;				\
 })
+
+/* Acesso ao pai vermelho */
+struct rb_node *rb_red_parent(struct rb_node *red);
+
+/* Rotação e ajuste de pais */
+void __rb_rotate_set_parents(struct rb_node *old, struct rb_node *new,
+                             struct rb_root *root, int color);
+
+/* Inserção principal */
+void __rb_insert(struct rb_node *node, struct rb_root *root,
+                 void (*augment_rotate)(struct rb_node *old, struct rb_node *new));
+
+/* Navegação */
+struct rb_node *rb_first(const struct rb_root *root);
+struct rb_node *rb_last(const struct rb_root *root);
+struct rb_node *rb_next(const struct rb_node *node);
+struct rb_node *rb_prev(const struct rb_node *node);
+struct rb_node *rb_next_postorder(const struct rb_node *node);
+struct rb_node *rb_first_postorder(const struct rb_root *root);
+struct rb_node *rb_left_deepest_node(const struct rb_node *node);
+
+/* Ligação de nós */
+void rb_link_node(struct rb_node *node, struct rb_node *parent,
+                  struct rb_node **rb_link);
+void rb_link_node_rcu(struct rb_node *node, struct rb_node *parent,
+                      struct rb_node **rb_link);
+void rb_link_linked_node(struct rb_node *node, struct rb_node *parent,
+                         struct rb_node **link);
+
+/* Inserção com cache (leftmost) */
+void rb_insert_color_cached(struct rb_node *node,
+                            struct rb_root_cached *root,
+                            bool leftmost);
+struct rb_node *rb_erase_cached(struct rb_node *node,
+                                struct rb_root_cached *root);
+void rb_replace_node_cached(struct rb_node *victim,
+                            struct rb_node *new,
+                            struct rb_root_cached *root);
+struct rb_node *rb_add_cached(struct rb_node *node,
+                              struct rb_root_cached *tree,
+                              bool (*less)(struct rb_node *,
+                                           const struct rb_node *));
+
+/* Inserção com lista ligada */
+bool rb_add_linked(struct rb_node_linked *node,
+                   struct rb_root_linked *tree,
+                   bool (*less)(struct rb_node *,
+                                const struct rb_node *));
+bool rb_erase_linked(struct rb_node_linked *node,
+                     struct rb_root_linked *root);
+
+/* Inserção genérica */
+void __rb_add(struct rb_node *node, struct rb_root *tree,
+              bool (*less)(struct rb_node *, const struct rb_node *),
+              void (*linkop)(struct rb_node *, struct rb_node *,
+                             struct rb_node **));
+void rb_add(struct rb_node *node, struct rb_root *tree,
+            bool (*less)(struct rb_node *, const struct rb_node *));
+
+/* Busca e inserção combinadas */
+struct rb_node *rb_find_add_cached(struct rb_node *node,
+                                   struct rb_root_cached *tree,
+                                   int (*cmp)(const struct rb_node *new,
+                                              const struct rb_node *exist));
+struct rb_node *rb_find_add(struct rb_node *node,
+                            struct rb_root *tree,
+                            int (*cmp)(struct rb_node *,
+                                       const struct rb_node *));
+struct rb_node *rb_find_add_rcu(struct rb_node *node,
+                                struct rb_root *tree,
+                                int (*cmp)(struct rb_node *,
+                                           const struct rb_node *));
+
+/* Busca pura */
+struct rb_node *rb_find(const void *key, const struct rb_root *tree,
+                        int (*cmp)(const void *key,
+                                   const struct rb_node *));
+struct rb_node *rb_find_rcu(const void *key, const struct rb_root *tree,
+                            int (*cmp)(const void *key,
+                                       const struct rb_node *));
+struct rb_node *rb_find_first(const void *key, const struct rb_root *tree,
+                              int (*cmp)(const void *key,
+                                         const struct rb_node *));
+struct rb_node *rb_next_match(const void *key, struct rb_node *node,
+                              int (*cmp)(const void *key,
+                                         const struct rb_node *));
+
+/* Manipulação de cores */
+void rb_set_black(struct rb_node *rb);
+void rb_set_parent(struct rb_node *rb, struct rb_node *p);
+void rb_set_parent_color(struct rb_node *rb, struct rb_node *p, int color);
+
+/* Remoção e balanceamento */
+void ____rb_erase_color(struct rb_node *parent, struct rb_root *root,
+                        void (*augment_rotate)(struct rb_node *old,
+                                               struct rb_node *new));
+void __rb_erase_color(struct rb_node *parent, struct rb_root *root,
+                      void (*augment_rotate)(struct rb_node *old,
+                                             struct rb_node *new));
+void rb_insert_color(struct rb_node *node, struct rb_root *root);
+void rb_erase(struct rb_node *node, struct rb_root *root);
+
+/* Callbacks dummy */
+void dummy_propagate(struct rb_node *node, struct rb_node *stop);
+void dummy_copy(struct rb_node *old, struct rb_node *new);
+void dummy_rotate(struct rb_node *old, struct rb_node *new);
+
+/* Inserção com augmentação */
+void __rb_insert_augmented(struct rb_node *node, struct rb_root *root,
+                           void (*augment_rotate)(struct rb_node *old,
+                                                  struct rb_node *new));
+
+/* Substituição de nós */
+void rb_replace_node(struct rb_node *victim, struct rb_node *new,
+                     struct rb_root *root);
+void rb_replace_node_rcu(struct rb_node *victim, struct rb_node *new,
+                         struct rb_root *root);
+
+/* Mudança de filhos */
+void __rb_change_child(struct rb_node *old, struct rb_node *new,
+                       struct rb_node *parent, struct rb_root *root);
+void __rb_change_child_rcu(struct rb_node *old, struct rb_node *new,
+                           struct rb_node *parent, struct rb_root *root);
+
+/* Remoção com augmentação */
+struct rb_node *__rb_erase_augmented(struct rb_node *node,
+                                     struct rb_root *root,
+                                     const struct rb_augment_callbacks *augment);
+void rb_erase_augmented(struct rb_node *node,
+                        struct rb_root *root,
+                        const struct rb_augment_callbacks *augment);
+void rb_erase_augmented_cached(struct rb_node *node,
+                               struct rb_root_cached *root,
+                               const struct rb_augment_callbacks *augment);
 #endif
